@@ -1,0 +1,24 @@
+# ============================================================
+#  TEST 3 : Fonctions et conditions SI/SINON
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# Définir une fonction réutilisable
+definir afficher_top3(data) {
+    top = de data trier par note desc limiter 3
+    afficher top
+}
+
+# Appeler la fonction
+afficher_top3(etudiants)
+
+# Condition : si plus de 5 étudiants ont la moyenne
+admis = de etudiants ou note >= 10
+compter admis
+
+si compter(admis) > 5 {
+    afficher admis
+} sinon {
+    afficher etudiants
+}

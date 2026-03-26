@@ -1,0 +1,18 @@
+# ============================================================
+#  TEST 5 : Boucle "pour chaque"
+#  pour chaque ligne dans etudiants { afficher ligne.nom }
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# Boucle simple : afficher le nom de chaque étudiant
+pour chaque etudiant dans etudiants {
+    afficher etudiant.nom
+}
+
+# Boucle sur les admis seulement
+admis = de etudiants ou note >= 10 trier par note desc
+
+pour chaque etudiant dans admis {
+    afficher etudiant.nom
+}

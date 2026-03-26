@@ -1,0 +1,31 @@
+# ============================================================
+#  TEST 4 : Expressions mathématiques
+#
+#  Syntaxe : calculer nouvelle_col = col1 * coeff1 + col2 * coeff2
+#
+#  Exemple réel :
+#    note_finale = note * 0.6 + exam * 0.4
+#    (60% contrôle continu + 40% examen final)
+# ============================================================
+
+charger "etudiants2.csv" comme etudiants
+
+# Calcul pondéré : 60% note + 40% exam
+resultats = de etudiants calculer note_finale = note * 0.6 + exam * 0.4
+
+afficher resultats
+moyenne resultats.note_finale
+
+# Filtrer les admis sur la note finale calculée
+admis = de etudiants
+        calculer note_finale = note * 0.6 + exam * 0.4
+        ou note_finale >= 10
+        trier par note_finale desc
+
+afficher admis
+compter admis
+moyenne admis.note_finale
+
+# Calcul avec parenthèses : moyenne des deux notes
+avec_moy = de etudiants calculer moyenne_notes = (note + exam) * 0.5
+afficher avec_moy

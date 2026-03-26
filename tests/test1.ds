@@ -1,0 +1,28 @@
+# ============================================================
+#  TEST 1 : Opérations de base
+#  - Charger un CSV
+#  - Filtrer, trier, limiter
+#  - Afficher, compter, moyenne
+# ============================================================
+
+# Charger le fichier des étudiants
+charger "etudiants.csv" comme etudiants
+
+# Afficher tous les étudiants
+afficher etudiants
+
+# Compter combien il y en a
+compter etudiants
+
+# Calculer la moyenne des notes
+moyenne etudiants.note
+
+# Filtrer les étudiants qui ont la moyenne
+resultat = de etudiants ou note >= 10
+
+# Trier par note décroissante
+top = de etudiants trier par note desc
+
+# Afficher le top 3
+podium = de etudiants trier par note desc limiter 3
+afficher podium

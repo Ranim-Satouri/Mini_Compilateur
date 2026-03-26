@@ -1,0 +1,7 @@
+# ============================================================
+#  TEST ERREUR SYNTAXIQUE
+#  Ce test DOIT produire une erreur syntaxique
+#  (guillemets manquants autour du fichier)
+# ============================================================
+
+charger etudiants.csv comme etudiants

@@ -1,0 +1,134 @@
+# -----------------------------------------------------------
+# Charger le CSV
+# -----------------------------------------------------------
+charger "etudiants.csv" comme etudiants
+
+# -----------------------------------------------------------
+# Ajouter une nouvelle ligne avec dictionnaire
+# -----------------------------------------------------------
+nouvelle_ligne = {"nom": "Ranim", "note": 16.0, "classe": "INFO1", "age": 21}
+ajouter nouvelle_ligne dans etudiants
+
+# -----------------------------------------------------------
+# Afficher la table complète
+# -----------------------------------------------------------
+afficher etudiants
+
+# -----------------------------------------------------------
+# Sélectionner seulement nom et note
+# -----------------------------------------------------------
+res_selection = de etudiants selectionner [nom, note]
+afficher res_selection
+
+# -----------------------------------------------------------
+# Calculer une note finale avec coefficient
+# -----------------------------------------------------------
+res_calc = de etudiants calculer note_finale = note * 0.6 + 2
+afficher res_calc
+
+# -----------------------------------------------------------
+# Filtrer avec condition
+# -----------------------------------------------------------
+res_filtre = de etudiants ou note >= 15
+afficher res_filtre
+
+# -----------------------------------------------------------
+# Trier par note desc
+# -----------------------------------------------------------
+res_tri = de etudiants trier par note desc
+afficher res_tri
+
+# -----------------------------------------------------------
+# Limiter à 3 lignes
+# -----------------------------------------------------------
+res_limite = de etudiants limiter 3
+afficher res_limite
+
+# -----------------------------------------------------------
+# Boucle pour chaque ligne
+# -----------------------------------------------------------
+pour chaque ligne dans etudiants {
+    si ligne.note >= 15 {
+        afficher ligne.nom
+    } sinon {
+        afficher ligne.note
+    }
+}
+
+# -----------------------------------------------------------
+# Définir une fonction utilisateur
+# -----------------------------------------------------------
+definir afficher_nom(ligne) {
+    afficher ligne.nom
+}
+
+# Appeler la fonction
+pour chaque ligne dans etudiants {
+    afficher_nom(ligne)
+}
+
+# -----------------------------------------------------------
+# Moyenne et compter
+# -----------------------------------------------------------
+moyenne etudiants.note
+compter etudiants
+
+# -----------------------------------------------------------
+# Grouper et aggreger
+# -----------------------------------------------------------
+res_group = de etudiants grouper par classe aggreger mean(note), sum(age)
+afficher res_group
+
+# -----------------------------------------------------------
+# Sauver dans fichier CSV
+# -----------------------------------------------------------
+sauver etudiants dans "etudiants_modifie.csv"
+
+
+# --- Trier ASC (jamais testé)
+res_tri_asc = de etudiants trier par note asc
+afficher res_tri_asc
+
+# --- Filtre avec ==, !=, 
+res_filtre_texte = de etudiants ou classe == "INFO1"
+afficher res_filtre_texte
+
+res_filtre_inf = de etudiants ou note < 10
+afficher res_filtre_inf
+
+# --- Clauses chaînées (selectionner + ou + trier dans une seule requête)
+res_chaine = de etudiants ou note >= 12 selectionner [nom, note] trier par note desc
+afficher res_chaine
+
+# --- Afficher requête inline (sans variable intermédiaire)
+afficher de etudiants limiter 2
+
+# --- si sans sinon
+pour chaque ligne dans etudiants {
+    si ligne.note >= 18 {
+        afficher ligne.nom
+    }
+}
+
+# --- Jointure (nécessite un deuxième CSV, ex: classes.csv)
+charger "classes.csv" comme classes
+afficher classes
+res_join = de etudiants joindre classes sur classe
+afficher res_join
+
+
+
+# --- Fonction avec expression interne
+definir afficher_note_finale(ligne) {
+    afficher ligne.note
+}
+pour chaque ligne dans etudiants {
+    afficher_note_finale(ligne)
+}
+
+
+# --- compter() dans une condition
+x = 30
+si 30 >= 5 {
+    afficher etudiants
+}

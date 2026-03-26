@@ -1,0 +1,24 @@
+# ============================================================
+#  TEST 2 : Requête complète avec toutes les clauses
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+charger "classes.csv" comme classes
+
+# Requête complète :
+# - sélectionner seulement nom et note
+# - filtrer note >= 10
+# - trier par note décroissante
+# - garder les 5 premiers
+rapport = de etudiants
+          selectionner [nom, note, classe]
+          ou note >= 10
+          trier par note desc
+          limiter 5
+
+afficher rapport
+compter rapport
+moyenne rapport.note
+
+# Sauvegarder le résultat
+sauver rapport dans "admis.csv"

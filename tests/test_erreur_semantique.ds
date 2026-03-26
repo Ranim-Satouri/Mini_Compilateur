@@ -1,0 +1,7 @@
+# ============================================================
+#  TEST ERREUR : Variable non déclarée
+#  Ce test DOIT produire une erreur sémantique
+# ============================================================
+
+# Erreur : "inexistant" n'a jamais été chargé
+afficher inexistant
