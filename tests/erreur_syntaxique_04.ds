@@ -1,0 +1,12 @@
+# ============================================================
+#  erreur_syntaxique_04.ds
+#  ERREUR : mot-clé "sur" manquant dans joindre
+#  Attendu : SyntaxError → "Syntaxe 'joindre' incorrecte"
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+charger "notes.csv" comme notes
+
+# FAUX : la syntaxe correcte est "joindre table sur colonne"
+joint = de etudiants joindre notes id
+afficher joint

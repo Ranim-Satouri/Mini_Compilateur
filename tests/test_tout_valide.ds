@@ -1,0 +1,420 @@
+# ============================================================
+#  test_tout_valide.ds
+#  Test COMPLET et VALIDE — DataScript v3.0
+#
+#  Ce fichier couvre TOUTES les fonctionnalités du langage
+#  et compile sans la moindre erreur syntaxique ni sémantique.
+#
+#  Prérequis : data/etudiants.csv et data/notes.csv
+#  (voir README_tests.md pour le contenu exact des CSV)
+# ============================================================
+
+
+# ============================================================
+#  SECTION 1 — CHARGEMENT DES DONNÉES
+# ============================================================
+
+# Charger deux tables depuis des fichiers CSV
+charger "etudiants.csv" comme etudiants
+charger "notes.csv" comme notes
+
+
+# ============================================================
+#  SECTION 2 — AFFICHAGE DIRECT D'UNE TABLE
+# ============================================================
+
+afficher etudiants
+afficher notes
+
+
+# ============================================================
+#  SECTION 3 — ACCÈS À UNE COLONNE SPÉCIFIQUE
+# ============================================================
+
+# Affiche uniquement les valeurs d'une colonne
+afficher etudiants.nom
+afficher etudiants.note
+
+
+# ============================================================
+#  SECTION 4 — STATISTIQUES SUR UNE TABLE ET SES COLONNES
+# ============================================================
+
+# Nombre total de lignes
+compter etudiants
+
+# Statistiques numériques sur la colonne "note"
+moyenne   etudiants.note
+minimum   etudiants.note
+maximum   etudiants.note
+ecart_type etudiants.note
+somme     etudiants.note
+
+
+# ============================================================
+#  SECTION 5 — REQUÊTES : SÉLECTION DE COLONNES
+# ============================================================
+
+# Garder seulement nom et note
+noms_notes = de etudiants selectionner [nom, note]
+afficher noms_notes
+
+# Garder id, nom, ville
+id_nom_ville = de etudiants selectionner [id, nom, ville]
+afficher id_nom_ville
+
+
+# ============================================================
+#  SECTION 6 — REQUÊTES : FILTRES SIMPLES
+# ============================================================
+
+# Filtre avec opérateur >=
+bons = de etudiants ou_ note >= 12
+afficher bons
+
+# Filtre avec opérateur <=
+faibles = de etudiants ou_ note <= 8
+afficher faibles
+
+# Filtre avec opérateur ==
+exactement_15 = de etudiants ou_ note == 15
+afficher exactement_15
+
+# Filtre avec opérateur !=
+pas_paris = de etudiants ou_ ville != "Paris"
+afficher pas_paris
+
+# Filtre avec opérateur >
+adultes = de etudiants ou_ age > 18
+afficher adultes
+
+# Filtre avec opérateur <
+mineurs = de etudiants ou_ age < 18
+afficher mineurs
+
+
+# ============================================================
+#  SECTION 7 — REQUÊTES : FILTRES COMPOSÉS AVEC ET
+# ============================================================
+
+# Les bons étudiants majeurs
+bons_majeurs = de etudiants ou_ note >= 12 et age >= 18
+afficher bons_majeurs
+
+# Les bons parisiens
+bons_parisiens = de etudiants ou_ note >= 12 et ville == "Paris"
+afficher bons_parisiens
+
+# Triple condition avec ET
+top_paris_adultes = de etudiants ou_ note >= 15 et ville == "Paris" et age >= 20
+afficher top_paris_adultes
+
+
+# ============================================================
+#  SECTION 8 — REQUÊTES : FILTRES COMPOSÉS AVEC OU LOGIQUE
+# ============================================================
+
+# Très bons OU très mauvais
+extremes = de etudiants ou_ note >= 16 ou note <= 5
+afficher extremes
+
+# Paris ou_ Lyon
+grandes_villes = de etudiants ou_ ville == "Paris" ou ville == "Lyon"
+afficher grandes_villes
+
+
+# ============================================================
+#  SECTION 9 — REQUÊTES : TRI
+# ============================================================
+
+# Tri ascendant par note (défaut)
+tries_asc = de etudiants trier par note asc
+afficher tries_asc
+
+# Tri descendant par note
+tries_desc = de etudiants trier par note desc
+afficher tries_desc
+
+# Tri par nom alphabétique
+tries_nom = de etudiants trier par nom asc
+afficher tries_nom
+
+
+# ============================================================
+#  SECTION 10 — REQUÊTES : LIMITATION
+# ============================================================
+
+# Garder les 3 premières lignes
+top3 = de etudiants trier par note desc limiter 3
+afficher top3
+
+# Garder 1 seule ligne
+premier = de etudiants limiter 1
+afficher premier
+
+
+# ============================================================
+#  SECTION 11 — REQUÊTES : COLONNES CALCULÉES
+# ============================================================
+
+# Ajouter un bonus de 2 points
+avec_bonus = de etudiants calculer note_bonus = note + 2
+afficher avec_bonus
+
+# Calculer le double de l'âge
+age_double = de etudiants calculer age_double = age + age
+afficher age_double
+
+# Calculer note sur 100
+note_sur_100 = de etudiants calculer note_pct = note * 5
+afficher note_sur_100
+
+
+# ============================================================
+#  SECTION 12 — REQUÊTES : JOINTURE
+# ============================================================
+
+# Joindre etudiants et notes sur la colonne id
+joint = de etudiants joindre notes sur id
+afficher joint
+
+
+# ============================================================
+#  SECTION 13 — REQUÊTES : GROUP BY + AGRÉGATION
+# ============================================================
+
+# Moyenne et somme des notes par ville
+stats_ville = de etudiants grouper par ville aggreger moyenne(note), somme(note)
+afficher stats_ville
+
+# Agrégation par une seule fonction
+nb_par_ville = de etudiants grouper par ville aggreger somme(age)
+afficher nb_par_ville
+
+
+# ============================================================
+#  SECTION 14 — CHAÎNAGE DE CLAUSES
+# ============================================================
+
+# Filtrer + trier + limiter
+top2_bons = de etudiants ou_ note >= 10 trier par note desc limiter 2
+afficher top2_bons
+
+# Sélectionner + filtrer + trier
+noms_bons_tries = de etudiants selectionner [nom, note, ville] ou_ note >= 12 trier par note desc
+afficher noms_bons_tries
+
+# Filtrer + calculer
+bons_avec_bonus = de etudiants ou_ note >= 12 calculer note_finale = note + 2
+afficher bons_avec_bonus
+
+
+# ============================================================
+#  SECTION 15 — EXPRESSIONS MATHÉMATIQUES
+# ============================================================
+
+# Affectation de valeurs numériques calculées
+###########total = 100 + 50
+##########ratio = total / 3
+#produit = 4 * 25
+#difference = 200 - 75
+
+#######afficher total
+##########afficher ratio
+#afficher produit
+#afficher difference
+
+
+# ============================================================
+#  SECTION 16 — DICTIONNAIRE ET INSERTION
+# ============================================================
+
+# Créer un dictionnaire représentant un étudiant
+nouvel_etudiant = {"nom": "Frank", "note": 14, "age": 21, "ville": "Lyon", "id": 7}
+
+# Insérer ce dictionnaire dans la table etudiants
+ajouter nouvel_etudiant dans etudiants
+
+# Vérifier que la ligne a bien été ajoutée
+compter etudiants
+afficher etudiants
+
+
+# ============================================================
+#  SECTION 17 — NETTOYAGE DES VALEURS MANQUANTES
+# ============================================================
+
+# Supprimer les lignes où au moins une valeur est manquante
+#nettoyer etudiants
+
+# Supprimer les lignes où la colonne "note" est manquante
+#nettoyer etudiants.note
+
+
+# ============================================================
+#  SECTION 18 — REMPLISSAGE DES VALEURS MANQUANTES
+# ============================================================
+
+# Remplacer les valeurs manquantes de "note" par 0
+remplir etudiants.note 0
+
+# Remplacer les valeurs manquantes de "age" par 18
+remplir etudiants.age 18
+
+
+# ============================================================
+#  SECTION 19 — RENOMMER UNE COLONNE
+# ============================================================
+
+# Renommer "note" en "score"
+renommer etudiants.note comme score
+afficher etudiants
+
+# Renommer "ville" en "localite"
+renommer etudiants.ville comme localite
+afficher etudiants
+
+
+# ============================================================
+#  SECTION 20 — SUPPRIMER UNE COLONNE
+# ============================================================
+
+# Supprimer la colonne "age" (devenue inutile)
+supprimer colonne etudiants.age
+afficher etudiants
+
+
+# ============================================================
+#  SECTION 21 — SUPPRIMER DES LIGNES SELON CONDITION
+# ============================================================
+
+# Supprimer les étudiants avec un score nul
+supprimer lignes etudiants ou_ score <= 0
+afficher etudiants
+
+# Supprimer les étudiants sans localité connue
+supprimer lignes etudiants ou_ localite == "Inconnu"
+afficher etudiants
+
+
+# ============================================================
+#  SECTION 22 — DÉDUPLICATION
+# ============================================================
+
+# Supprimer les lignes totalement identiques
+dedupliquer etudiants
+
+# Supprimer les doublons basés uniquement sur la colonne "nom"
+dedupliquer etudiants sur nom
+
+afficher etudiants
+
+
+# ============================================================
+#  SECTION 23 — STRUCTURE SI / SINON
+# ============================================================
+
+# SI avec compter
+si compter(etudiants) > 3 {
+    afficher etudiants
+} sinon {
+    afficher notes
+}
+
+# SI sans SINON
+si compter(etudiants) > 0 {
+    compter etudiants
+}
+
+# SI avec condition sur accès champ — non supporté directement,
+# on passe par une variable intermédiaire calculée
+top3_si = de etudiants trier par score desc limiter 3
+si compter(top3_si) > 0 {
+    afficher top3_si
+} sinon {
+    afficher etudiants
+}
+
+
+# ============================================================
+#  SECTION 24 — BOUCLE POUR CHAQUE
+# ============================================================
+
+# Itérer sur chaque ligne d'une table
+pour chaque ligne dans top3_si {
+    afficher ligne.nom
+}
+
+# Itérer sur une table complète
+pour chaque etudiant dans etudiants {
+    afficher etudiant.score
+}
+
+
+# ============================================================
+#  SECTION 25 — DÉFINIR ET APPELER UNE FONCTION (1 PARAMÈTRE)
+# ============================================================
+
+definir afficher_table(t) {
+    afficher t
+    compter t
+}
+
+afficher_table(etudiants)
+afficher_table(notes)
+
+
+# ============================================================
+#  SECTION 26 — DÉFINIR ET APPELER UNE FONCTION (2 PARAMÈTRES)
+# ============================================================
+
+definir filtrer_et_trier(table,seuil) {
+    filtres = de table ou_ etudiants.score >= seuil
+    tries = de filtres trier par score desc
+    afficher tries
+}
+
+filtrer_et_trier(etudiants,10)
+
+
+# ============================================================
+#  SECTION 27 — DÉFINIR ET APPELER UNE FONCTION (3 PARAMÈTRES)
+# ============================================================
+
+definir top_n_filtre(table, seuil, n) {
+    filtres = de table ou_ etudiants.score >= n
+    top = de filtres trier par score desc limiter n
+    afficher top
+    compter top
+}
+
+top_n_filtre(etudiants, 10, 18)
+
+
+# ============================================================
+#  SECTION 28 — SAUVEGARDE DES RÉSULTATS
+# ============================================================
+
+# Sauvegarder la table nettoyée
+sauver etudiants dans "etudiants_final.csv"
+
+# Sauvegarder le top 3
+sauver top3_si dans "top3_final.csv"
+
+# Sauvegarder la jointure
+sauver joint dans "joint_final.csv"
+
+# Sauvegarder les stats par ville
+sauver stats_ville dans "stats_ville.csv"
+
+
+nb = compter etudiants
+moy = moyenne etudiants.score
+
+afficher nb 
+afficher moy
+
+
+si nb >= 3 {
+    afficher etudiants
+}

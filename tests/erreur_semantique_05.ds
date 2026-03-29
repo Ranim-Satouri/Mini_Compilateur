@@ -1,0 +1,10 @@
+# ============================================================
+#  erreur_semantique_05.ds
+#  ERREUR : appel d'une fonction non définie
+#  Attendu : ErreurSemantique → fonction 'calculer_stats' non définie
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : la fonction n'a jamais été définie avec "definir"
+calculer_stats(etudiants)

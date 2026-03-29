@@ -1,0 +1,10 @@
+# ============================================================
+#  erreur_semantique_14.ds
+#  ERREUR : colonne inexistante dans dedupliquer sur
+#  Attendu : ErreurSemantique → colonne 'code_postal' inexistante (dedupliquer sur)
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : "code_postal" n'est pas une colonne de etudiants.csv
+dedupliquer etudiants sur code_postal

@@ -1,0 +1,11 @@
+# ============================================================
+#  erreur_syntaxique_08.ds
+#  ERREUR : bloc "si" non fermé (accolade fermante manquante)
+#  Attendu : SyntaxError → programme incomplet / accolade mal placée
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : l'accolade fermante "}" est absente
+si compter(etudiants) > 0 {
+    afficher etudiants

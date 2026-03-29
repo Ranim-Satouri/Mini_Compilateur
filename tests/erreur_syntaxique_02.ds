@@ -1,0 +1,11 @@
+# ============================================================
+#  erreur_syntaxique_02.ds
+#  ERREUR : crochets manquants dans selectionner
+#  Attendu : SyntaxError → "Syntaxe 'selectionner' incorrecte"
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : selectionner requiert des crochets [ ]
+resultat = de etudiants selectionner nom, note
+afficher resultat

@@ -1,0 +1,10 @@
+# ============================================================
+#  erreur_semantique_10.ds
+#  ERREUR : colonne source introuvable dans renommer
+#  Attendu : ErreurSemantique → colonne 'score_brut' inexistante (renommer)
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : "score_brut" n'est pas une colonne existante
+renommer etudiants.score_brut comme score_final

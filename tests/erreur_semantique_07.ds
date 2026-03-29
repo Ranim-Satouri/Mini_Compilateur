@@ -1,0 +1,14 @@
+# ============================================================
+#  erreur_semantique_07.ds
+#  ERREUR : paramètre dupliqué dans la définition d'une fonction
+#  Attendu : ErreurSemantique → paramètre 'x' dupliqué
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : le paramètre "x" apparaît deux fois
+definir double_param(x, x) {
+    afficher etudiants
+}
+
+double_param(etudiants, etudiants)

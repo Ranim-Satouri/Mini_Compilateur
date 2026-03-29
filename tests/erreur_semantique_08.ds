@@ -1,0 +1,10 @@
+# ============================================================
+#  erreur_semantique_08.ds
+#  ERREUR : colonne inexistante dans nettoyer
+#  Attendu : ErreurSemantique → colonne 'adresse' inexistante (nettoyer)
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : "adresse" n'est pas une colonne de etudiants.csv
+nettoyer etudiants.adresse

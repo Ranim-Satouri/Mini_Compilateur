@@ -1,0 +1,9 @@
+# ============================================================
+#  erreur_semantique_01.ds
+#  ERREUR : fichier CSV introuvable
+#  Attendu : ErreurSemantique → fichier 'fantome.csv' introuvable
+# ============================================================
+
+# FAUX : le fichier n'existe pas dans data/
+charger "fantome.csv" comme data
+afficher data

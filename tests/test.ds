@@ -18,7 +18,8 @@ afficher etudiants
 # Sélectionner seulement nom et note
 # -----------------------------------------------------------
 res_selection = de etudiants selectionner [nom, note]
-afficher res_selection
+test = de res_selection trier par note asc
+afficher test
 
 # -----------------------------------------------------------
 # Calculer une note finale avec coefficient
@@ -54,6 +55,7 @@ pour chaque ligne dans etudiants {
         afficher ligne.note
     }
 }
+
 
 # -----------------------------------------------------------
 # Définir une fonction utilisateur

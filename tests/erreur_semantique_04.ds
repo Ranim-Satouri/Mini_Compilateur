@@ -1,0 +1,10 @@
+# ============================================================
+#  erreur_semantique_04.ds
+#  ERREUR : statistique numérique sur une colonne texte
+#  Attendu : ErreurSemantique → colonne 'nom' non numérique (moyenne)
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : "nom" est une colonne de texte, pas numérique
+moyenne etudiants.nom

@@ -1,0 +1,10 @@
+# ============================================================
+#  erreur_semantique_15.ds
+#  ERREUR : variable non déclarée dans sauver
+#  Attendu : ErreurSemantique → variable 'top5' non déclarée
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : "top5" n'a jamais été construite
+sauver top5 dans "top5.csv"

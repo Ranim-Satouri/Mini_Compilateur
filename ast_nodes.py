@@ -1,15 +1,6 @@
 # ============================================================
 #  AST — Nœuds de l'Arbre Syntaxique Abstrait
-#  Rôle : représenter le programme en mémoire sous forme d'arbre
-#
-#  Chaque classe = un type de nœud dans l'arbre
-#  Exemple pour :  resultat = de etudiants ou note >= 10
-#
-#       AffectationNode
-#           ├── nom_var = "resultat"
-#           └── valeur = RequeteNode
-#                           ├── source = "etudiants"
-#                           └── clauses = [FiltreNode(note >= 10)]
+#  DataScript v3.0
 # ============================================================
 
 from dataclasses import dataclass, field
@@ -29,8 +20,8 @@ class NoeudBase:
 # ------------------------------------------------------------
 @dataclass
 class ChargerNode(NoeudBase):
-    fichier: str        # nom du fichier CSV (sans les guillemets)
-    variable: str       # nom de la variable qui stocke les données
+    fichier: str
+    variable: str
 
 
 # ------------------------------------------------------------
@@ -38,7 +29,7 @@ class ChargerNode(NoeudBase):
 # ------------------------------------------------------------
 @dataclass
 class AfficherNode(NoeudBase):
-    expression: Any     # ce qu'on affiche (RequeteNode ou nom de variable)
+    expression: Any
 
 
 # ------------------------------------------------------------
@@ -46,8 +37,8 @@ class AfficherNode(NoeudBase):
 # ------------------------------------------------------------
 @dataclass
 class AffectationNode(NoeudBase):
-    variable: str       # nom de la variable à gauche du =
-    valeur: Any         # valeur à droite du = (souvent une RequeteNode)
+    variable: str
+    valeur: Any
 
 
 # ------------------------------------------------------------
@@ -59,10 +50,30 @@ class CompterNode(NoeudBase):
 
 
 # ------------------------------------------------------------
-# MOYENNE variable.colonne
+# MOYENNE / MINIMUM / MAXIMUM / ECART_TYPE / SOMME variable.colonne
 # ------------------------------------------------------------
 @dataclass
 class MoyenneNode(NoeudBase):
+    variable: str
+    colonne: str
+
+@dataclass
+class MinimumNode(NoeudBase):
+    variable: str
+    colonne: str
+
+@dataclass
+class MaximumNode(NoeudBase):
+    variable: str
+    colonne: str
+
+@dataclass
+class EcartTypeNode(NoeudBase):
+    variable: str
+    colonne: str
+
+@dataclass
+class SommeNode(NoeudBase):
     variable: str
     colonne: str
 
@@ -81,28 +92,28 @@ class SauverNode(NoeudBase):
 # ------------------------------------------------------------
 @dataclass
 class SiNode(NoeudBase):
-    condition: Any              # ConditionNode
-    bloc_si: List[Any]          # liste d'instructions si vrai
-    bloc_sinon: List[Any]       # liste d'instructions si faux (peut être vide)
+    condition: Any
+    bloc_si: List[Any]
+    bloc_sinon: List[Any]
 
 
 # ------------------------------------------------------------
-# DEFINIR nom(param) { ... }
+# DEFINIR nom(params) { ... }  — multi-paramètres
 # ------------------------------------------------------------
 @dataclass
 class DefinirFonctionNode(NoeudBase):
     nom: str
-    parametre: str
+    parametres: List[str]       # liste de paramètres (était: parametre str)
     corps: List[Any]
 
 
 # ------------------------------------------------------------
-# nom(argument)  — appel de fonction
+# nom(args)  — appel de fonction avec arguments multiples
 # ------------------------------------------------------------
 @dataclass
 class AppelFonctionNode(NoeudBase):
     nom: str
-    argument: str
+    arguments: List[Any]        # liste d'arguments (était: argument str)
 
 
 # ------------------------------------------------------------
@@ -110,7 +121,7 @@ class AppelFonctionNode(NoeudBase):
 # ------------------------------------------------------------
 @dataclass
 class RequeteNode(NoeudBase):
-    source: str                         # nom de la table/variable source
+    source: str
     clauses: List[Any] = field(default_factory=list)
 
 
@@ -127,7 +138,7 @@ class SelectionnerNode(NoeudBase):
 # ------------------------------------------------------------
 @dataclass
 class FiltreNode(NoeudBase):
-    condition: Any      # ConditionNode
+    condition: Any      # ConditionNode ou ConditionComposeeNode
 
 
 # ------------------------------------------------------------
@@ -136,7 +147,7 @@ class FiltreNode(NoeudBase):
 @dataclass
 class TrierNode(NoeudBase):
     colonne: str
-    ordre: str = "asc"  # "asc" ou "desc"
+    ordre: str = "asc"
 
 
 # ------------------------------------------------------------
@@ -144,8 +155,7 @@ class TrierNode(NoeudBase):
 # ------------------------------------------------------------
 @dataclass
 class LimiterNode(NoeudBase):
-    nombre: int
-
+    nombre: Any   # int pour un littéral, str pour une variable
 
 # ------------------------------------------------------------
 # JOINDRE table2 SUR colonne
@@ -157,102 +167,108 @@ class JoindreNode(NoeudBase):
 
 
 # ------------------------------------------------------------
-# CALCULER nouvelle_colonne = expr_math  (dans une requête)
-# Exemple : calculer note_finale = note * 0.6 + exam * 0.4
+# CALCULER nouvelle_colonne = expr_math
 # ------------------------------------------------------------
 @dataclass
 class CalculerNode(NoeudBase):
-    nouvelle_colonne: str   # nom de la colonne créée
-    expression: Any         # ExprMathNode
+    nouvelle_colonne: str
+    expression: Any
 
 
 # ------------------------------------------------------------
 # POUR CHAQUE ligne DANS variable { ... }
-# Exemple : pour chaque ligne dans etudiants { afficher ligne.nom }
 # ------------------------------------------------------------
 @dataclass
 class PourNode(NoeudBase):
-    iterateur: str          # nom de la variable de boucle (ex: "ligne")
-    source: str             # variable DataFrame à itérer (ex: "etudiants")
-    corps: List[Any]        # liste d'instructions du bloc
+    iterateur: str
+    source: str
+    corps: List[Any]
 
 
 # ------------------------------------------------------------
 # ACCÈS À UN CHAMP : variable.colonne
-# Exemple : ligne.nom   →  accède à la colonne "nom" de la ligne courante
 # ------------------------------------------------------------
 @dataclass
 class AccesChampNode(NoeudBase):
-    variable: str       # nom de la variable (ex: "ligne")
-    champ: str          # nom du champ/colonne (ex: "nom")
+    variable: str
+    champ: str
 
 
 # ------------------------------------------------------------
-# AFFECTATION d'une expression mathématique sur une variable scalaire
-# Exemple : note_finale = note * 0.6 + exam * 0.4
-# Ici note et exam sont des colonnes du DataFrame courant
+# AFFECTATION d'une expression mathématique
 # ------------------------------------------------------------
 @dataclass
 class AffectationExprNode(NoeudBase):
-    variable: str       # nom de la variable résultat
-    expression: Any     # ExprMathNode
+    variable: str
+    expression: Any
+
+
+# ------------------------------------------------------------
+# AFFECTATION d'une statistique  (nb = compter t  /  s = somme t.col)
+# ------------------------------------------------------------
+@dataclass
+class AffectationStatNode(NoeudBase):
+    variable: str
+    stat: Any   # CompterNode | MoyenneNode | MinimumNode | MaximumNode | EcartTypeNode | SommeNode
 
 
 # ============================================================
 #  NŒUDS D'EXPRESSIONS MATHÉMATIQUES
-#  Ces nœuds représentent des calculs arithmétiques
 # ============================================================
 
 @dataclass
 class BinOpNode(NoeudBase):
-    """Opération binaire : gauche OP droite"""
-    gauche: Any         # ExprMath
-    operateur: str      # +, -, *, /
-    droite: Any         # ExprMath
-
+    gauche: Any
+    operateur: str
+    droite: Any
 
 @dataclass
 class VarMathNode(NoeudBase):
-    """Référence à une variable ou colonne dans une expression"""
-    nom: str            # ex: "note", "exam"
-
+    nom: str
 
 @dataclass
 class AccesColonneNode(NoeudBase):
-    """Accès table.colonne dans une expression : ligne.note"""
     variable: str
     colonne: str
 
-
 @dataclass
 class NombreNode(NoeudBase):
-    """Valeur numérique littérale : 0.6, 10, 2.5"""
     valeur: float
 
+
 # ------------------------------------------------------------
-# CONDITION : colonne OP valeur  (ex: note >= 10)
+# CONDITIONS
 # ------------------------------------------------------------
+
 @dataclass
 class ConditionNode(NoeudBase):
-    gauche: str         # nom de la colonne
-    operateur: str      # >=, <=, ==, !=, >, <
-    droite: Any         # valeur comparée (nombre, texte)
-    est_compter: bool = False  # True si c'est compter(var) OP val
+    gauche: Any
+    operateur: str
+    droite: Any
+    est_compter: bool = False
 
+
+@dataclass
+class ConditionEtNode(NoeudBase):
+    """Condition combinée avec ET (AND logique)"""
+    gauche: Any
+    droite: Any
+
+
+@dataclass
+class ConditionOuNode(NoeudBase):
+    """Condition combinée avec OU logique (OR logique)"""
+    gauche: Any
+    droite: Any
 
 
 # ============================================================
-#  DICTIONNAIRE (structure de données)
+#  DICTIONNAIRE
 # ============================================================
 
 @dataclass
 class DictNode:
-    elements: dict  # ex: {"nom": "ranim", "age": 22}
-
-
-# ============================================================
-#  AFFECTATION D'UN DICTIONNAIRE
-# ============================================================
+    elements: dict
 
 @dataclass
 class AffectationDictNode:
@@ -266,29 +282,97 @@ class AffectationDictNode:
 
 @dataclass
 class InsertionNode:
-    ligne: str   # variable contenant le dict
-    table: str   # DataFrame cible
+    ligne: str
+    table: str
 
 
 # ============================================================
-#  GROUP BY
+#  GROUP BY + AGGREGATION
 # ============================================================
 
 @dataclass
 class GroupByNode:
     colonne: str
 
-
-# ============================================================
-#  AGGREGATION
-# ============================================================
-
 @dataclass
 class AggFunc:
-    fonction: str   # mean, sum
+    fonction: str
     colonne: str
-
 
 @dataclass
 class AggNode:
     fonctions: list
+
+
+# ============================================================
+#  NETTOYAGE DES VALEURS MANQUANTES
+# ============================================================
+
+@dataclass
+class NettoyerNode(NoeudBase):
+    """
+    nettoyer table         → dropna() sur tout le DataFrame
+    nettoyer table.colonne → dropna(subset=[colonne])
+    """
+    variable: str
+    colonne: Optional[str] = None   # None = toutes les colonnes
+
+
+@dataclass
+class RemplirNode(NoeudBase):
+    """
+    remplir table.colonne valeur → fillna(valeur) sur la colonne
+    """
+    variable: str
+    colonne: str
+    valeur: Any
+
+
+# ============================================================
+#  RENOMMER UNE COLONNE
+# ============================================================
+
+@dataclass
+class RenommerNode(NoeudBase):
+    """
+    renommer table.ancien_nom comme nouveau_nom
+    """
+    variable: str
+    ancien_nom: str
+    nouveau_nom: str
+
+
+# ============================================================
+#  SUPPRESSION
+# ============================================================
+
+@dataclass
+class SupprimerColonneNode(NoeudBase):
+    """
+    supprimer colonne table.nom_colonne
+    """
+    variable: str
+    colonne: str
+
+
+@dataclass
+class SupprimerLignesNode(NoeudBase):
+    """
+    supprimer lignes table ou condition
+    """
+    variable: str
+    condition: Any
+
+
+# ============================================================
+#  DEDUPLICATION
+# ============================================================
+
+@dataclass
+class DedupliquerNode(NoeudBase):
+    """
+    dedupliquer table              → drop_duplicates()
+    dedupliquer table sur colonne  → drop_duplicates(subset=["colonne"])
+    """
+    variable: str
+    colonne: Optional[str] = None

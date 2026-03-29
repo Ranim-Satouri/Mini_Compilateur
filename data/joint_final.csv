@@ -1,0 +1,8 @@
+id,nom,note_x,age,ville,matiere,note_y
+1,Alice,15.0,20.0,Paris,Maths,15
+2,Bob,8.0,17.0,Lyon,Maths,8
+3,Charlie,18.0,22.0,Paris,Maths,18
+4,Diana,11.0,19.0,Marseille,Physique,11
+5,Eve,5.0,16.0,Lyon,Physique,5
+6,Alice,15.0,20.0,Paris,Maths,15
+7,Hugo,14.0,21.0,Lyon,Physique,14

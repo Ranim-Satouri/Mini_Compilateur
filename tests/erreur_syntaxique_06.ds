@@ -1,0 +1,14 @@
+# ============================================================
+#  erreur_syntaxique_06.ds
+#  ERREUR : parenthèses manquantes dans definir
+#  Attendu : SyntaxError → "Syntaxe 'definir' incorrecte"
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : definir requiert toujours des parenthèses (même sans paramètres)
+definir ma_fonction {
+    afficher etudiants
+}
+
+ma_fonction()

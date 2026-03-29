@@ -1,0 +1,8 @@
+# ============================================================
+#  erreur_semantique_02.ds
+#  ERREUR : variable non déclarée utilisée dans afficher
+#  Attendu : ErreurSemantique → variable 'etudiants' non déclarée
+# ============================================================
+
+# FAUX : on utilise "etudiants" sans l'avoir chargée au préalable
+afficher etudiants

@@ -1,0 +1,10 @@
+# ============================================================
+#  erreur_syntaxique_09.ds
+#  ERREUR : point manquant entre table et colonne dans remplir
+#  Attendu : SyntaxError → "Syntaxe 'remplir' incorrecte"
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : la syntaxe correcte est "remplir table.colonne valeur"
+remplir etudiants note 0

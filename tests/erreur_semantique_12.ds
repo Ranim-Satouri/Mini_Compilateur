@@ -1,0 +1,10 @@
+# ============================================================
+#  erreur_semantique_12.ds
+#  ERREUR : variable non déclarée dans supprimer lignes
+#  Attendu : ErreurSemantique → variable 'resultats' non déclarée
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : "resultats" n'a jamais été déclarée
+supprimer lignes resultats ou note <= 5

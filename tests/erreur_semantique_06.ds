@@ -1,0 +1,15 @@
+# ============================================================
+#  erreur_semantique_06.ds
+#  ERREUR : mauvais nombre d'arguments lors de l'appel de fonction
+#  Attendu : ErreurSemantique → 1 argument fourni mais 2 attendus
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+definir bonification(table, bonus) {
+    enrichi = de table calculer note_finale = note + bonus
+    afficher enrichi
+}
+
+# FAUX : on passe 1 argument alors que la fonction en attend 2
+bonification(etudiants)

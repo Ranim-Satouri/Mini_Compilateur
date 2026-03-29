@@ -1,0 +1,10 @@
+# ============================================================
+#  erreur_semantique_09.ds
+#  ERREUR : colonne inexistante dans remplir
+#  Attendu : ErreurSemantique → colonne 'revenu' inexistante (remplir)
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : "revenu" n'existe pas dans la table etudiants
+remplir etudiants.revenu 0

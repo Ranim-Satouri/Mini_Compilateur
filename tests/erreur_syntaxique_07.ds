@@ -1,0 +1,11 @@
+# ============================================================
+#  erreur_syntaxique_07.ds
+#  ERREUR : utilisation de "=" au lieu de "==" dans une condition
+#  Attendu : SyntaxError → signe '=' inattendu
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : dans un filtre, l'égalité s'écrit "==" et non "="
+filtres = de etudiants ou note = 10
+afficher filtres

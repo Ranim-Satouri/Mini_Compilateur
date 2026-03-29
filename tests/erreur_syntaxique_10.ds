@@ -1,0 +1,10 @@
+# ============================================================
+#  erreur_syntaxique_10.ds
+#  ERREUR : mot-clé inexistant dans le langage
+#  Attendu : SyntaxError → token inattendu / mot-clé inconnu
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : "imprimer" n'existe pas, le mot-clé correct est "afficher"
+imprimer etudiants

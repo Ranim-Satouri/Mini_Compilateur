@@ -1,0 +1,10 @@
+# ============================================================
+#  erreur_semantique_13.ds
+#  ERREUR : variable non déclarée dans dedupliquer
+#  Attendu : ErreurSemantique → variable 'archive' non déclarée
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : "archive" n'a pas été chargée
+dedupliquer archive sur nom

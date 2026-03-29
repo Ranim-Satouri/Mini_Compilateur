@@ -1,0 +1,10 @@
+# ============================================================
+#  erreur_semantique_11.ds
+#  ERREUR : colonne inexistante dans supprimer colonne
+#  Attendu : ErreurSemantique → colonne 'telephone' inexistante
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : "telephone" n'existe pas dans la table etudiants
+supprimer colonne etudiants.telephone

@@ -1,0 +1,10 @@
+# ============================================================
+#  erreur_semantique_17.ds
+#  ERREUR : statistique sur une variable non déclarée
+#  Attendu : ErreurSemantique → variable 'ventes' non déclarée (somme)
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : "ventes" n'a jamais été chargée
+somme ventes.montant

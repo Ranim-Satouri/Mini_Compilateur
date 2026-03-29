@@ -1,0 +1,11 @@
+# ============================================================
+#  erreur_semantique_16.ds
+#  ERREUR : source non déclarée dans une requête "de"
+#  Attendu : ErreurSemantique → variable 'commandes' non déclarée (requête)
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : "commandes" n'a pas été chargée
+resultat = de commandes selectionner [id, montant]
+afficher resultat

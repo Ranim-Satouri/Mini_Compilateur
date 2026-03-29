@@ -1,0 +1,11 @@
+# ============================================================
+#  erreur_syntaxique_03.ds
+#  ERREUR : mot-clé "par" manquant dans trier
+#  Attendu : SyntaxError → "Syntaxe 'trier' incorrecte"
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : la syntaxe correcte est "trier par colonne"
+tries = de etudiants trier note desc
+afficher tries

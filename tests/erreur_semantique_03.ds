@@ -1,0 +1,11 @@
+# ============================================================
+#  erreur_semantique_03.ds
+#  ERREUR : colonne inexistante dans selectionner
+#  Attendu : ErreurSemantique → colonne 'salaire' inexistante
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : "salaire" n'est pas une colonne du fichier etudiants.csv
+resultat = de etudiants selectionner [nom, salaire]
+afficher resultat

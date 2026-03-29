@@ -1,0 +1,9 @@
+# ============================================================
+#  erreur_syntaxique_01.ds
+#  ERREUR : guillemets manquants sur l'instruction charger
+#  Attendu : SyntaxError → "Syntaxe 'charger' incorrecte"
+# ============================================================
+
+# FAUX : le chemin du fichier doit être entre guillemets
+charger etudiants.csv comme etudiants
+afficher etudiants

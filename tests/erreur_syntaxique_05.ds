@@ -1,0 +1,12 @@
+# ============================================================
+#  erreur_syntaxique_05.ds
+#  ERREUR : mot "chaque" manquant dans la boucle pour
+#  Attendu : SyntaxError → "Syntaxe 'pour chaque' incorrecte"
+# ============================================================
+
+charger "etudiants.csv" comme etudiants
+
+# FAUX : la syntaxe correcte est "pour chaque x dans y { ... }"
+pour ligne dans etudiants {
+    afficher ligne.nom
+}
