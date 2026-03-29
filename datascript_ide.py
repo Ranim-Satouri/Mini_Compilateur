@@ -20,8 +20,8 @@ ACCENT  = "#5b8af5"
 ACCENT2 = "#3dc9a0"
 WARN    = "#f5a623"
 ERR     = "#f55c5c"
-TEXT    = "#c8d0e8"
-MUTED   = "#4a5168"
+TEXT    = "#ffffff"
+MUTED   = "#7a8aaa"
 HL_KW   = "#c792ea"
 HL_STR  = "#c3e88d"
 HL_NUM  = "#f78c6c"
@@ -260,8 +260,8 @@ class CodeEditor(QPlainTextEdit):
     def __init__(self):
         super().__init__()
         self._lna = LineNumArea(self)
-        self.setFont(_mono(11))
-        self.setTabStopDistance(2 * self.fontMetrics().horizontalAdvance(' '))
+        self.setFont(_mono(16))
+        self.setTabStopDistance(4 * self.fontMetrics().horizontalAdvance(' '))
 
         pal = self.palette()
         pal.setColor(QPalette.ColorRole.Base, QColor(BG))
@@ -270,7 +270,7 @@ class CodeEditor(QPlainTextEdit):
 
         self.setStyleSheet(f"""
             QPlainTextEdit {{
-                background:{BG}; color:{TEXT}; border:none;
+                background:{BG}; color:{TEXT}; border:none; font-size:16px;
                 selection-background-color:rgba(91,138,245,0.28); padding:4px 0;
             }}
             QScrollBar:vertical   {{ background:{GUTTER}; width:8px; border:none; }}
@@ -375,16 +375,12 @@ class RunThread(QThread):
     def run(self):
         tmp_ds = tmp_py = None
         success = False
+        # Noms fixes — un seul fichier écrasé à chaque run
+        tmp_ds = str(Path(self.ds_dir) / "_script_courant.ds")
+        tmp_py = str(Path(self.ds_dir) / "_script_courant_generated.py")
         try:
-            with tempfile.NamedTemporaryFile(
-                mode='w', suffix='.ds', encoding='utf-8',
-                dir=self.ds_dir, delete=False
-            ) as f:
+            with open(tmp_ds, 'w', encoding='utf-8') as f:
                 f.write(self.code)
-                tmp_ds = f.name
-
-            base   = Path(tmp_ds).stem
-            tmp_py = str(Path(self.ds_dir) / f"{base}_generated.py")
 
             if self.ds_dir not in sys.path:
                 sys.path.insert(0, self.ds_dir)
@@ -534,24 +530,24 @@ class DataScriptIDE(QMainWindow):
     # ── En-tête ──────────────────────────────────────────────
     def _mk_header(self):
         w = QWidget()
-        w.setFixedHeight(46)
+        w.setFixedHeight(58)
         w.setStyleSheet(f"background:{SURFACE}; border-bottom:1px solid {BORDER};")
         lay = QHBoxLayout(w)
         lay.setContentsMargins(18, 0, 18, 0)
-        lay.setSpacing(10)
+        lay.setSpacing(12)
 
         badge = QLabel("DS")
-        badge.setFixedSize(30, 30)
+        badge.setFixedSize(36, 36)
         badge.setAlignment(Qt.AlignmentFlag.AlignCenter)
         badge.setStyleSheet(
             f"background:qlineargradient(x1:0,y1:0,x2:1,y2:1,"
             f"stop:0 {ACCENT},stop:1 {ACCENT2});"
-            "border-radius:8px; color:#fff; font-weight:800; font-size:13px;"
+            "border-radius:9px; color:#fff; font-weight:800; font-size:16px;"
         )
         name = QLabel("DataScript")
-        name.setStyleSheet(f"color:#dde3f5; font-size:15px; font-weight:700;")
+        name.setStyleSheet(f"color:#ffffff; font-size:18px; font-weight:700;")
         ver = QLabel("v3.0")
-        ver.setStyleSheet(f"color:{MUTED}; font-size:10px;")
+        ver.setStyleSheet(f"color:{MUTED}; font-size:13px;")
 
         logo = QHBoxLayout()
         logo.setSpacing(8)
@@ -563,15 +559,15 @@ class DataScriptIDE(QMainWindow):
 
         # Pill d'état
         self._sdot = QLabel("●")
-        self._sdot.setStyleSheet(f"color:{ACCENT2}; font-size:9px;")
+        self._sdot.setStyleSheet(f"color:{ACCENT2}; font-size:12px;")
         self._stxt = QLabel("Prêt")
-        self._stxt.setStyleSheet(f"color:{MUTED}; font-size:11px;")
+        self._stxt.setStyleSheet(f"color:{MUTED}; font-size:14px;")
         pill = QWidget()
         pill.setStyleSheet(
             f"background:{PANEL}; border:1px solid {BORDER2}; border-radius:20px;"
         )
         pl = QHBoxLayout(pill)
-        pl.setContentsMargins(10, 4, 10, 4)
+        pl.setContentsMargins(12, 5, 12, 5)
         pl.setSpacing(6)
         pl.addWidget(self._sdot)
         pl.addWidget(self._stxt)
@@ -587,12 +583,12 @@ class DataScriptIDE(QMainWindow):
         # ── Cases à cocher options pipeline ──────────────────
         cb_style = f"""
             QCheckBox {{
-                color: {MUTED}; font-size: 10.5px; spacing: 5px;
+                color: {TEXT}; font-size: 14px; spacing: 6px;
             }}
-            QCheckBox:hover {{ color: {TEXT}; }}
+            QCheckBox:hover {{ color: {ACCENT}; }}
             QCheckBox::indicator {{
-                width: 13px; height: 13px;
-                border: 1px solid {BORDER2}; border-radius: 3px;
+                width: 16px; height: 16px;
+                border: 1px solid {BORDER2}; border-radius: 4px;
                 background: {PANEL};
             }}
             QCheckBox::indicator:checked {{
@@ -631,26 +627,26 @@ class DataScriptIDE(QMainWindow):
         b.clicked.connect(cb)
         if kind == "ghost":
             b.setStyleSheet(f"""
-                QPushButton {{ background:transparent; color:{MUTED};
+                QPushButton {{ background:transparent; color:{TEXT};
                     border:1px solid {BORDER2}; border-radius:7px;
-                    padding:5px 13px; font-size:11.5px; }}
-                QPushButton:hover {{ color:{TEXT}; border-color:{ACCENT};
-                    background:rgba(91,138,245,.07); }}
+                    padding:7px 16px; font-size:14px; }}
+                QPushButton:hover {{ color:#ffffff; border-color:{ACCENT};
+                    background:rgba(91,138,245,.12); }}
                 QPushButton:disabled {{ color:{MUTED}; opacity:0.4; }}
             """)
         elif kind == "warn":
             b.setStyleSheet(f"""
                 QPushButton {{ background:transparent; color:{WARN};
                     border:1px solid {WARN}; border-radius:7px;
-                    padding:5px 13px; font-size:11.5px; }}
+                    padding:7px 16px; font-size:14px; }}
                 QPushButton:hover {{ background:rgba(245,166,35,.1); }}
                 QPushButton:disabled {{ color:{MUTED}; border-color:{BORDER2}; }}
             """)
         elif kind == "run":
             b.setStyleSheet(f"""
                 QPushButton {{ background:{ACCENT}; color:#fff; border:none;
-                    border-radius:7px; padding:5px 16px;
-                    font-size:11.5px; font-weight:600; }}
+                    border-radius:7px; padding:7px 20px;
+                    font-size:14px; font-weight:700; }}
                 QPushButton:hover {{ background:#7aa2f7; }}
                 QPushButton:disabled {{ background:{MUTED}; }}
             """)
@@ -659,13 +655,13 @@ class DataScriptIDE(QMainWindow):
     # ── Onglets ──────────────────────────────────────────────
     def _mk_tabrow(self):
         w = QWidget()
-        w.setFixedHeight(34)
+        w.setFixedHeight(40)
         w.setStyleSheet(f"background:{SURFACE}; border-bottom:1px solid {BORDER};")
         lay = QHBoxLayout(w)
         lay.setContentsMargins(0, 0, 0, 0)
         self._tab_lbl = QLabel("  script.ds")
         self._tab_lbl.setStyleSheet(
-            f"color:{TEXT}; font-size:11.5px; padding:0 16px;"
+            f"color:{TEXT}; font-size:14px; padding:0 18px;"
             f"border-bottom:2px solid {ACCENT};"
         )
         lay.addWidget(self._tab_lbl)
@@ -677,7 +673,7 @@ class DataScriptIDE(QMainWindow):
         col = WARN if val else TEXT
         self._tab_lbl.setText(f"{dot}script.ds")
         self._tab_lbl.setStyleSheet(
-            f"color:{col}; font-size:11.5px; padding:0 16px;"
+            f"color:{col}; font-size:14px; padding:0 18px;"
             f"border-bottom:2px solid {ACCENT};"
         )
 
@@ -703,7 +699,7 @@ class DataScriptIDE(QMainWindow):
         lay.setContentsMargins(0, 0, 0, 0)
 
         self._cur_lbl = QLabel("Ln 1, Col 1")
-        self._cur_lbl.setStyleSheet(f"color:{MUTED}; font-size:10.5px;")
+        self._cur_lbl.setStyleSheet(f"color:{MUTED}; font-size:13px;")
         lay.addWidget(
             self._pane_hdr("Éditeur DataScript", ACCENT,
                            [("copier", self._copy_editor)],
@@ -743,9 +739,9 @@ class DataScriptIDE(QMainWindow):
 
         self.terminal = QTextEdit()
         self.terminal.setReadOnly(True)
-        self.terminal.setFont(_mono(11))
+        self.terminal.setFont(_mono(16))
         self.terminal.setStyleSheet(f"""
-            QTextEdit {{ background:#090b10; color:{TEXT}; border:none; padding:10px 14px; }}
+            QTextEdit {{ background:#090b10; color:{TEXT}; border:none; padding:10px 14px; font-size:16px; }}
             QScrollBar:vertical {{ background:{GUTTER}; width:8px; border:none; }}
             QScrollBar::handle:vertical {{ background:{BORDER2}; border-radius:4px; min-height:20px; }}
             QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{ height:0; }}
@@ -785,23 +781,23 @@ class DataScriptIDE(QMainWindow):
     # ── Barre de statut ──────────────────────────────────────
     def _mk_statbar(self):
         w = QWidget()
-        w.setFixedHeight(23)
+        w.setFixedHeight(30)
         w.setStyleSheet(f"background:{SURFACE}; border-top:1px solid {BORDER};")
         lay = QHBoxLayout(w)
         lay.setContentsMargins(14, 0, 14, 0)
 
         ds_lbl = QLabel("DataScript")
-        ds_lbl.setStyleSheet(f"color:{ACCENT}; font-weight:500; font-size:10.5px;")
+        ds_lbl.setStyleSheet(f"color:{ACCENT}; font-weight:600; font-size:13px;")
         self._lc_lbl = QLabel("1 ligne")
         self._cc_lbl = QLabel("0 car.")
         for lb in [self._lc_lbl, self._cc_lbl]:
-            lb.setStyleSheet(f"color:{MUTED}; font-size:10.5px;")
+            lb.setStyleSheet(f"color:{MUTED}; font-size:13px;")
 
         sc_lbl = QLabel("⌨ Raccourcis")
-        sc_lbl.setStyleSheet(f"color:{MUTED}; font-size:10.5px; cursor:pointer;")
+        sc_lbl.setStyleSheet(f"color:{MUTED}; font-size:13px; cursor:pointer;")
         sc_lbl.mousePressEvent = lambda _: self._show_shortcuts()
         utf_lbl = QLabel("◉ UTF-8")
-        utf_lbl.setStyleSheet(f"color:{ACCENT2}; font-size:10.5px;")
+        utf_lbl.setStyleSheet(f"color:{ACCENT2}; font-size:13px;")
 
         left = QHBoxLayout()
         left.setSpacing(14)
@@ -827,17 +823,17 @@ class DataScriptIDE(QMainWindow):
     # ── En-tête de panneau ───────────────────────────────────
     def _pane_hdr(self, title, dot_color, actions, extra=None):
         w = QWidget()
-        w.setFixedHeight(32)
+        w.setFixedHeight(38)
         w.setStyleSheet(f"background:{GUTTER}; border-bottom:1px solid {BORDER};")
         lay = QHBoxLayout(w)
         lay.setContentsMargins(13, 0, 13, 0)
         lay.setSpacing(8)
 
         dot = QLabel("■")
-        dot.setStyleSheet(f"color:{dot_color}; font-size:9px;")
+        dot.setStyleSheet(f"color:{dot_color}; font-size:12px;")
         lbl = QLabel(title.upper())
         lbl.setStyleSheet(
-            f"color:{MUTED}; font-size:9.5px; font-weight:600; letter-spacing:1px;"
+            f"color:{TEXT}; font-size:13px; font-weight:600; letter-spacing:1px;"
         )
         lay.addWidget(dot)
         lay.addWidget(lbl)
@@ -848,8 +844,8 @@ class DataScriptIDE(QMainWindow):
         for text, cb in actions:
             b = QPushButton(text)
             b.setStyleSheet(f"""
-                QPushButton {{ background:transparent; color:{MUTED}; font-size:10px;
-                    border:1px solid {BORDER2}; border-radius:4px; padding:2px 8px; }}
+                QPushButton {{ background:transparent; color:{MUTED}; font-size:13px;
+                    border:1px solid {BORDER2}; border-radius:4px; padding:3px 10px; }}
                 QPushButton:hover {{ color:{TEXT}; border-color:{ACCENT}; }}
             """)
             b.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -923,10 +919,10 @@ class DataScriptIDE(QMainWindow):
                 color = HL_CMT           # gris — commentaires
                 bold  = False
             elif t == "":
-                color = TEXT
+                color = "#ffffff"
                 bold  = False
             else:
-                color = "#dde3f5"        # blanc-bleu — texte normal
+                color = "#ffffff"        # blanc pur — tout le reste
                 bold  = False
         else:
             color = colors.get(kind, TEXT)
